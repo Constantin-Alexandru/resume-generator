@@ -1,9 +1,0 @@
-#Folders
-/node_modules
-/dist
-/.vscode
-
-#Files
-.env
-.env.dev
-package-lock.json
