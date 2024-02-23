@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Skill from './interfaces/Skill';
 import Pair from './interfaces/Pair';
+import SectionItem from './interfaces/SectionItem';
 
 function getDataFromLocalStorage(key: string): any {
   const data = localStorage.getItem(key);
@@ -22,8 +23,10 @@ export default function useData() {
   const [title, setTitle] = useState<string>('');
   const [summary, setSummary] = useState<string>('');
   const [contacts, setContacts] = useState<Array<Pair>>([]);
-  const [skillCategories, setSkillCategories] = useState<Array<string>>([]);
+  const [categories, setCategories] = useState<Array<string>>([]);
   const [skills, setSkills] = useState<Array<Skill>>([]);
+  const [sections, setSections] = useState<Array<string>>([]);
+  const [sectionItems, setSectionItems] = useState<Array<SectionItem>>([]);
 
   //Loading from local storage
   useEffect(() => {
@@ -35,13 +38,9 @@ export default function useData() {
 
     const _title = getDataFromLocalStorage('title') ?? '';
 
-    console.log('Set Title');
-
     setTitle(_title);
 
     const _summary = getDataFromLocalStorage('summary') ?? '';
-
-    console.log('Set Summary');
 
     setSummary(_summary);
 
@@ -49,9 +48,9 @@ export default function useData() {
 
     setContacts(_contacts);
 
-    const _skillCategories = getDataFromLocalStorage('skill-categories') ?? [];
+    const _categories = getDataFromLocalStorage('categories') ?? [];
 
-    setSkillCategories(_skillCategories);
+    setCategories(_categories);
 
     const _skills = getDataFromLocalStorage('skills') ?? [];
 
@@ -60,6 +59,14 @@ export default function useData() {
     const _completed = getDataFromLocalStorage('completed') ?? false;
 
     setCompleted(_completed);
+
+    const _sections = getDataFromLocalStorage('sections') ?? [];
+
+    setSections(_sections);
+
+    const _sectionItems = getDataFromLocalStorage('section-items') ?? [];
+
+    setSectionItems(_sectionItems);
   }, []);
 
   //Saving elements in local storage
@@ -82,10 +89,10 @@ export default function useData() {
   }, [contacts]);
 
   useEffect(() => {
-    const skillCategoriesStr = JSON.stringify(skillCategories);
+    const categoriesStr = JSON.stringify(categories);
 
-    localStorage.setItem('skill-categories', skillCategoriesStr);
-  }, [skillCategories]);
+    localStorage.setItem('categories', categoriesStr);
+  }, [categories]);
 
   useEffect(() => {
     const skillsStr = JSON.stringify(skills);
@@ -94,10 +101,22 @@ export default function useData() {
   }, [skills]);
 
   useEffect(() => {
+    const sectionsStr = JSON.stringify(sections);
+
+    localStorage.setItem('sections', sectionsStr);
+  }, [sections]);
+
+  useEffect(() => {
+    const sectionItemsStr = JSON.stringify(sectionItems);
+
+    localStorage.setItem('section-items', sectionItemsStr);
+  }, [sectionItems]);
+
+  useEffect(() => {
     const completedStr = JSON.stringify(completed);
 
     localStorage.setItem('completed', completedStr);
-  });
+  }, [completed]);
 
   return {
     completed,
@@ -110,9 +129,13 @@ export default function useData() {
     setSummary,
     contacts,
     setContacts,
-    skillCategories,
-    setSkillCategories,
+    categories,
+    setCategories,
     skills,
     setSkills,
+    sections,
+    setSections,
+    sectionItems,
+    setSectionItems,
   } as const;
 }

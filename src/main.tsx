@@ -6,6 +6,10 @@ import { ThemeProvider } from '@emotion/react';
 import { CssBaseline, createTheme } from '@mui/material';
 import PersonalDetails from './PersonalDetails';
 import Contacts from './Contacts';
+import SkillCategories from './SkillCategories';
+import Skills from './Skills';
+import Sections from './Sections';
+import SectionItems from './SectionItems';
 
 const theme = createTheme({
   palette: { mode: 'dark' },
@@ -48,6 +52,28 @@ const router = createBrowserRouter([
     path: '/contacts',
     element: <Contacts />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/skills',
+    element: <SkillCategories />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/skills/:category',
+        element: <Skills />,
+      },
+    ],
+  },
+  {
+    path: '/sections',
+    element: <Sections />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/sections/:section',
+        element: <SectionItems />,
+      },
+    ],
   },
 ]);
 

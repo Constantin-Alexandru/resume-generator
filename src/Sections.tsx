@@ -5,22 +5,23 @@ import Separator from './components/Separator';
 import Title from './components/Title';
 import useData from './data/useData';
 import { useState } from 'react';
-import EditPair from './components/EditPair';
-import { createPair } from './data/interfaces/Pair';
+import EditItem from './components/EditItem';
 import { deleteAt, insertAt, replaceAt } from './scripts/arrayHelpers';
-import PairDisplay from './components/PairDisplay';
+import ItemButtonDisplay from './components/ItemButtonDisplay';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navigator from './components/Navigator';
 
-export default function Contacts() {
-  const [contactModal, setContactModal] = useState<boolean>(false);
-  const [contactIndex, setContactIndex] = useState<number>(-1);
+export default function Sections() {
+  const navigate = useNavigate();
+  const { sections, setSections } = useData();
 
-  const { contacts, setContacts } = useData();
+  const [sectionIndex, setSectionIndex] = useState<number>(-1);
+  const [sectionModal, setSectionModal] = useState<boolean>(false);
 
   return (
-    <FlexContainer top={10}>
-      <FlexContainer>
-        <Title>Contacts</Title>
+    <FlexContainer>
+      <FlexContainer top={10}>
+        <Title>Sections</Title>
       </FlexContainer>
       <FlexContainer sx={{ width: '50%' }}>
         <Separator />
@@ -38,7 +39,7 @@ export default function Contacts() {
             fontWeight: 'bold',
           }}
         >
-          {contacts.length} contacts
+          {sections.length} sections
         </Typography>
         <Button
           sx={{
@@ -46,8 +47,8 @@ export default function Contacts() {
             aspectRatio: 1 / 1,
           }}
           onClick={() => {
-            setContactIndex(-1);
-            setContactModal(true);
+            setSectionIndex(-1);
+            setSectionModal(true);
           }}
         >
           <AddIcon />
@@ -57,18 +58,18 @@ export default function Contacts() {
         sx={{ width: '50%', height: '50vh', overflowY: 'auto' }}
         gap={2.5}
       >
-        {contacts.map((contact, index) => (
-          <PairDisplay
-            key={index}
+        {sections.map((section, index) => (
+          <ItemButtonDisplay
             index={index + 1}
-            pair={contact}
+            item={section}
+            onClick={() => navigate(`/sections/${section}`)}
             onEdit={() => {
-              setContactIndex(index);
-              setContactModal(true);
+              setSectionIndex(index);
+              setSectionModal(true);
             }}
             onDelete={() => {
-              const newContacts = deleteAt(contacts, index);
-              setContacts(newContacts);
+              const newCategories = deleteAt(sections, index);
+              setSections(newCategories);
             }}
             sx={{ width: '50%' }}
           />
@@ -76,33 +77,32 @@ export default function Contacts() {
       </FlexContainer>
       <Navigator
         leftText="Back"
-        leftURL="/personal-details"
-        rightText="continue"
-        rightURL="/skills"
+        leftURL="/skills"
+        rightText="Continue"
+        rightURL="generator"
       />
-      <Modal open={contactModal} onClose={() => setContactModal(false)}>
-        <EditPair
-          pair={
-            contactIndex === -1 ? createPair('', '') : contacts[contactIndex]
-          }
+      <Modal open={sectionModal}>
+        <EditItem
+          item={sectionIndex === -1 ? '' : sections[sectionIndex]}
           onSubmit={(value) => {
-            let newContacts = [];
+            let newSections = [];
 
-            if (contactIndex === -1)
-              newContacts = insertAt(contacts, value, contacts.length);
-            else newContacts = replaceAt(contacts, value, contactIndex);
+            if (sectionIndex === -1)
+              newSections = insertAt(sections, value, sections.length);
+            else newSections = replaceAt(sections, value, sectionIndex);
 
-            setContacts(newContacts);
+            setSections(newSections);
 
-            setContactIndex(-1);
-            setContactModal(false);
+            setSectionIndex(-1);
+            setSectionModal(false);
           }}
           onClose={() => {
-            setContactIndex(-1);
-            setContactModal(false);
+            setSectionIndex(-1);
+            setSectionModal(false);
           }}
         />
       </Modal>
+      <Outlet />
     </FlexContainer>
   );
 }

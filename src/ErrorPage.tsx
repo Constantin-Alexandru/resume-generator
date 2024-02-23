@@ -1,10 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import {
-  ErrorResponse,
-  isRouteErrorResponse,
-  useRouteError,
-} from 'react-router-dom';
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 export default function ErrorPage() {
   const error = useRouteError();
